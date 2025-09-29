@@ -1,6 +1,41 @@
-# Multi-Variant LaTeX Resume System
+# AI-Powered Resume System
+
+An end-to-end automated system for creating tailored resumes using AI. This system searches for jobs, creates customized resume variants, uses Claude AI to tailor content to job descriptions, and builds professional PDFs.
+
+## 🚀 Quick Start (NEW: Automated Workflow)
+
+```bash
+# 1. Install dependencies
+poetry install
+
+# 2. List available workflow configurations
+python run_workflow.py --list-configs
+
+# 3. Run complete end-to-end workflow
+python run_workflow.py --config data_scientist_remote
+
+# That's it! The system will:
+# - Search for jobs matching your criteria
+# - Let you select which jobs to apply to
+# - Use AI to tailor your resume for each job
+# - Build professional PDFs automatically
+```
+
+📖 **[Full Workflow Documentation →](WORKFLOW.md)**
+
+---
+
+## About This System
 
 This is a powerful resume builder that supports multiple resume variants with modular LaTeX sections. Each resume variant can be customized independently while sharing common build infrastructure.
+
+### Two Ways to Use This System:
+
+1. **🤖 Automated Workflow (Recommended)**: Use the AI-powered workflow for end-to-end automation
+   - See [WORKFLOW.md](WORKFLOW.md) for details
+
+2. **🔧 Manual Mode**: Use individual scripts for fine-grained control
+   - Continue reading below for manual usage
 
 ## File Structure
 

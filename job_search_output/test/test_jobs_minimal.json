@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "job_title": "Test Data Scientist",
+    "search_date": "2025-09-29",
+    "total_jobs_found": 3
+  },
+  "jobs": [
+    {
+      "title": "Senior Data Scientist",
+      "company": "Test Company A",
+      "location": "Remote",
+      "applicants": "15",
+      "link": "https://linkedin.com/jobs/test-1",
+      "salary_range": "$120k-$180k",
+      "job_type": "Full-time",
+      "seniority_level": "Senior",
+      "skills_required": "Python, SQL, Machine Learning, TensorFlow",
+      "job_description": "We are seeking a Senior Data Scientist to join our AI team. You will work on cutting-edge machine learning projects, develop predictive models, and collaborate with cross-functional teams.\n\nResponsibilities:\n- Build and deploy machine learning models at scale\n- Analyze large datasets using Python and SQL\n- Collaborate with engineering teams to productionize models\n- Present findings to stakeholders\n\nRequirements:\n- 5+ years of experience in data science\n- Strong Python programming skills\n- Experience with TensorFlow or PyTorch\n- Excellent communication skills\n- Master's degree in Computer Science, Statistics, or related field"
+    },
+    {
+      "title": "Data Scientist - ML Engineer",
+      "company": "Test Company B",
+      "location": "San Francisco, CA",
+      "applicants": "42",
+      "link": "https://linkedin.com/jobs/test-2",
+      "salary_range": "$150k-$200k",
+      "job_type": "Full-time",
+      "seniority_level": "Mid-Senior level",
+      "skills_required": "Python, Spark, AWS, Deep Learning",
+      "job_description": "Looking for a Data Scientist with strong ML engineering skills to build our recommendation system.\n\nKey Responsibilities:\n- Design and implement recommendation algorithms\n- Work with large-scale distributed systems\n- Optimize model performance and latency\n- A/B test new features\n\nQualifications:\n- 3+ years in data science or ML engineering\n- Proficiency in Python and Spark\n- Experience with AWS cloud services\n- Strong understanding of deep learning architectures"
+    },
+    {
+      "title": "Junior Data Scientist",
+      "company": "Test Startup C",
+      "location": "New York, NY",
+      "applicants": "8",
+      "link": "https://linkedin.com/jobs/test-3",
+      "salary_range": "$90k-$120k",
+      "job_type": "Full-time",
+      "seniority_level": "Entry level",
+      "skills_required": "Python, Pandas, Scikit-learn, Statistics",
+      "job_description": "Great opportunity for a junior data scientist to grow with a fast-paced startup.\n\nWhat you'll do:\n- Analyze customer data to derive insights\n- Build predictive models using Python\n- Create dashboards and visualizations\n- Support senior data scientists on projects\n\nRequired Skills:\n- 1-2 years of experience with data analysis\n- Strong Python skills (Pandas, NumPy, Scikit-learn)\n- Knowledge of statistics and probability\n- Bachelor's degree in a quantitative field"
+    }
+  ]
+}

@@ -1,0 +1,493 @@
+# AI Resume Workflow Configuration
+# Usage: python run_workflow.py --config data_scientist_remote
+
+configs:
+  # TEST CONFIG - Quick functionality test
+  test_minimal:
+    name: "Test Configuration - Minimal Processing"
+    description: "Quick test with minimal job search and processing (for testing only)"
+
+    # Step 1: Job Search - Only 3 results
+    job_search:
+      enabled: true
+      title: "Data Scientist"
+      keywords:
+        - "python"
+        - "remote"
+      location: "Remote"
+      num_results: 3  # Minimal for testing
+      filters:
+        job_type:
+          - "Full-time"
+        seniority_level:
+          - "Mid-Senior level"
+        min_applicants: 0
+        max_applicants: 200  # Broader to ensure we get results
+      script_path: "fetch_job/run.sh"
+      output_dir: "job_search_output"
+
+    # Step 2: Auto-select only 1 job for testing
+    folder_creation:
+      enabled: true
+      default_template: "resumes/default"
+      output_base: "resumes"
+      selection_mode: "manual"  # Manual so you can pick just 1
+      auto_selection:
+        max_applicants: 30
+        required_keywords:
+          - "python"
+      script_path: "create_job_folder.sh"
+
+    # Step 3: AI Tailoring - Only essential sections
+    ai_tailoring:
+      enabled: true
+      prompt_template: "job_prompt.jinja"
+      sections_to_tailor:
+        - "skills"  # Fastest section to tailor
+        - "summary"  # Quick summary update
+      ai_config:
+        model: "claude-sonnet-4-5"
+        tools:
+          - "Read"
+          - "Edit"
+          - "Write"
+        permission_mode: "acceptEdits"
+        output_format: "stream-json"
+        verbose: false  # Less output for speed
+      script_path: "resume_ai_creator.py"
+      process_mode: "sequential"
+
+    # Step 4: Build PDF
+    build:
+      enabled: true
+      compiler: "pdflatex"
+      runs: 2
+      clean_artifacts: true
+      script_path: "build.sh"
+      build_mode: "all"
+
+    # Workflow Control - Keep confirmations for visibility
+    workflow:
+      confirmations:
+        after_search: true
+        after_folder_creation: true
+        after_tailoring: true
+        after_build: true
+      auto_proceed_timeout: 0
+      continue_on_error: false
+      save_state: true
+      state_file: ".workflow_state_test.json"  # Separate state file for testing
+      notifications:
+        enabled: false
+
+    # Logging - Debug level for testing
+    logging:
+      level: "DEBUG"
+      file: "logs/test_workflow_{timestamp}.log"
+      console: true
+
+  # TEST CONFIG 2 - Ultra minimal (skip AI and build)
+  test_search_only:
+    name: "Test - Search and Folders Only"
+    description: "Test job search and folder creation only (no AI, no build)"
+
+    job_search:
+      enabled: true
+      title: "Software Engineer"
+      location: "Remote"
+      num_results: 3
+      filters:
+        job_type:
+          - "Full-time"
+      script_path: "fetch_job/run.sh"
+      output_dir: "job_search_output"
+
+    folder_creation:
+      enabled: true
+      default_template: "resumes/default"
+      output_base: "resumes"
+      selection_mode: "manual"
+      script_path: "create_job_folder.sh"
+
+    ai_tailoring:
+      enabled: false  # Skip for speed
+
+    build:
+      enabled: false  # Skip for speed
+
+    workflow:
+      confirmations:
+        after_search: true
+        after_folder_creation: true
+        after_tailoring: false
+        after_build: false
+      save_state: true
+      state_file: ".workflow_state_search_test.json"
+      continue_on_error: true
+
+    logging:
+      level: "INFO"
+      file: "logs/test_search_{timestamp}.log"
+      console: true
+
+  # TEST CONFIG 3 - Test AI tailoring on existing folder
+  test_ai_only:
+    name: "Test - AI Tailoring Only"
+    description: "Test AI tailoring on existing resume folder (skip search/folders)"
+
+    job_search:
+      enabled: false
+
+    folder_creation:
+      enabled: false
+
+    ai_tailoring:
+      enabled: true
+      prompt_template: "job_prompt.jinja"
+      sections_to_tailor:
+        - "skills"  # Just one section for quick test
+      ai_config:
+        model: "claude-sonnet-4-5"
+        tools:
+          - "Read"
+          - "Edit"
+          - "Write"
+        permission_mode: "acceptEdits"
+        output_format: "stream-json"
+        verbose: true
+      script_path: "resume_ai_creator.py"
+      process_mode: "sequential"
+      # NOTE: You need to manually set resume folders in state file
+      # Or modify orchestrator to accept folder paths
+
+    build:
+      enabled: false
+
+    workflow:
+      confirmations:
+        after_search: false
+        after_folder_creation: false
+        after_tailoring: true
+        after_build: false
+      save_state: false
+      continue_on_error: true
+
+    logging:
+      level: "DEBUG"
+      file: "logs/test_ai_{timestamp}.log"
+      console: true
+
+  # TEST CONFIG 4 - Dry run mode
+  test_dry_run:
+    name: "Test - Dry Run (Validate Config)"
+    description: "Validate configuration without executing (for config testing)"
+
+    job_search:
+      enabled: true
+      title: "Test Position"
+      location: "Test Location"
+      num_results: 1
+      script_path: "fetch_job/run.sh"
+      output_dir: "job_search_output"
+
+    folder_creation:
+      enabled: true
+      default_template: "resumes/default"
+      selection_mode: "manual"
+      script_path: "create_job_folder.sh"
+
+    ai_tailoring:
+      enabled: true
+      prompt_template: "job_prompt.jinja"
+      sections_to_tailor: ["skills"]
+      ai_config:
+        model: "claude-sonnet-4-5"
+        tools: ["Read", "Edit"]
+        permission_mode: "acceptEdits"
+      script_path: "resume_ai_creator.py"
+
+    build:
+      enabled: true
+      script_path: "build.sh"
+
+    workflow:
+      confirmations:
+        after_search: true
+        after_folder_creation: true
+        after_tailoring: true
+        after_build: true
+      save_state: false
+
+    logging:
+      level: "INFO"
+      console: true
+
+  # Example 1: Data Scientist - Remote positions
+  data_scientist_remote:
+    name: "Data Scientist - Remote Positions"
+    description: "Search for remote Data Scientist roles and create tailored resumes"
+
+    # Step 1: Job Search Configuration
+    job_search:
+      enabled: true
+      title: "Data Scientist"
+      keywords:
+        - "machine learning"
+        - "python"
+        - "sql"
+        - "data analysis"
+      location: "Remote"
+      num_results: 20
+      filters:
+        job_type:
+          - "Full-time"
+          - "Contract"
+        seniority_level:
+          - "Mid-Senior level"
+          - "Senior"
+        min_applicants: 0
+        max_applicants: 100
+      # Custom script path (optional)
+      script_path: "fetch_job/run.sh"
+      output_dir: "job_search_output"
+
+    # Step 2: Resume Folder Creation
+    folder_creation:
+      enabled: true
+      default_template: "resumes/default"
+      output_base: "resumes"
+      # How to select jobs: "manual", "all", "auto" (based on criteria)
+      selection_mode: "manual"
+      # If auto mode, specify selection criteria
+      auto_selection:
+        max_applicants: 50
+        required_keywords:
+          - "python"
+          - "machine learning"
+      # Script path
+      script_path: "create_job_folder.sh"
+
+    # Step 3: AI Resume Tailoring
+    ai_tailoring:
+      enabled: true
+      prompt_template: "job_prompt.jinja"
+      sections_to_tailor:
+        - "experience"
+        - "skills"
+        - "projects"
+        - "summary"
+      # AI configuration
+      ai_config:
+        model: "claude-sonnet-4-5"
+        tools:
+          - "Read"
+          - "Edit"
+          - "Write"
+        permission_mode: "acceptEdits"
+        output_format: "stream-json"
+        verbose: true
+      # Script path
+      script_path: "resume_ai_creator.py"
+      # Process mode: "sequential", "batch", "selective"
+      process_mode: "sequential"
+      # If selective, specify which companies
+      selective_companies: []
+
+    # Step 4: PDF Build
+    build:
+      enabled: true
+      compiler: "pdflatex"
+      runs: 2
+      clean_artifacts: true
+      output_naming: "resume-{title}-{company}.pdf"
+      script_path: "build.sh"
+      # Build mode: "all", "selective"
+      build_mode: "all"
+
+    # Workflow Control
+    workflow:
+      # Confirmation required after each step
+      confirmations:
+        after_search: true
+        after_folder_creation: true
+        after_tailoring: true
+        after_build: true
+      # Auto-proceed if no user input after N seconds (0 = wait forever)
+      auto_proceed_timeout: 0
+      # Continue on error
+      continue_on_error: false
+      # Save state for resumption
+      save_state: true
+      state_file: ".workflow_state.json"
+      # Notification settings
+      notifications:
+        enabled: false
+        email: ""
+        slack_webhook: ""
+
+    # Logging
+    logging:
+      level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+      file: "logs/workflow_{timestamp}.log"
+      console: true
+
+  # Example 2: ML Engineer - Toronto
+  ml_engineer_toronto:
+    name: "ML Engineer - Toronto"
+    description: "Machine Learning Engineer positions in Toronto area"
+
+    job_search:
+      enabled: true
+      title: "Machine Learning Engineer"
+      keywords:
+        - "deep learning"
+        - "tensorflow"
+        - "pytorch"
+        - "mlops"
+      location: "Toronto, ON, Canada"
+      num_results: 15
+      filters:
+        job_type:
+          - "Full-time"
+        seniority_level:
+          - "Senior"
+          - "Lead"
+      script_path: "fetch_job/run.sh"
+      output_dir: "job_search_output"
+
+    folder_creation:
+      enabled: true
+      default_template: "resumes/default"
+      output_base: "resumes"
+      selection_mode: "manual"
+      script_path: "create_job_folder.sh"
+
+    ai_tailoring:
+      enabled: true
+      prompt_template: "job_prompt.jinja"
+      sections_to_tailor:
+        - "experience"
+        - "skills"
+        - "projects"
+      ai_config:
+        model: "claude-sonnet-4-5"
+        tools:
+          - "Read"
+          - "Edit"
+          - "Write"
+        permission_mode: "acceptEdits"
+        output_format: "stream-json"
+        verbose: true
+      script_path: "resume_ai_creator.py"
+      process_mode: "sequential"
+
+    build:
+      enabled: true
+      compiler: "pdflatex"
+      runs: 2
+      clean_artifacts: true
+      script_path: "build.sh"
+      build_mode: "all"
+
+    workflow:
+      confirmations:
+        after_search: true
+        after_folder_creation: true
+        after_tailoring: true
+        after_build: true
+      auto_proceed_timeout: 0
+      continue_on_error: false
+      save_state: true
+      state_file: ".workflow_state.json"
+
+    logging:
+      level: "INFO"
+      file: "logs/workflow_{timestamp}.log"
+      console: true
+
+  # Example 3: Aggressive mode - Auto everything
+  data_scientist_auto:
+    name: "Data Scientist - Auto Mode"
+    description: "Fully automated workflow for Data Scientist positions"
+
+    job_search:
+      enabled: true
+      title: "Data Scientist"
+      location: "United States"
+      num_results: 10
+      filters:
+        job_type:
+          - "Full-time"
+        seniority_level:
+          - "Mid-Senior level"
+      script_path: "fetch_job/run.sh"
+      output_dir: "job_search_output"
+
+    folder_creation:
+      enabled: true
+      default_template: "resumes/default"
+      output_base: "resumes"
+      selection_mode: "auto"
+      auto_selection:
+        max_applicants: 50
+        required_keywords:
+          - "python"
+      script_path: "create_job_folder.sh"
+
+    ai_tailoring:
+      enabled: true
+      prompt_template: "job_prompt.jinja"
+      sections_to_tailor:
+        - "experience"
+        - "skills"
+        - "projects"
+      ai_config:
+        model: "claude-sonnet-4-5"
+        tools:
+          - "Read"
+          - "Edit"
+          - "Write"
+        permission_mode: "acceptEdits"
+        output_format: "stream-json"
+        verbose: false
+      script_path: "resume_ai_creator.py"
+      process_mode: "batch"
+
+    build:
+      enabled: true
+      compiler: "pdflatex"
+      runs: 2
+      clean_artifacts: true
+      script_path: "build.sh"
+      build_mode: "all"
+
+    workflow:
+      confirmations:
+        after_search: true
+        after_folder_creation: false
+        after_tailoring: false
+        after_build: true
+      auto_proceed_timeout: 0
+      continue_on_error: true
+      save_state: true
+      state_file: ".workflow_state.json"
+
+    logging:
+      level: "DEBUG"
+      file: "logs/workflow_{timestamp}.log"
+      console: true
+
+# Global defaults (used if not specified in individual configs)
+defaults:
+  workflow:
+    confirmations:
+      after_search: true
+      after_folder_creation: true
+      after_tailoring: true
+      after_build: true
+    auto_proceed_timeout: 0
+    continue_on_error: false
+    save_state: true
+  logging:
+    level: "INFO"
+    console: true

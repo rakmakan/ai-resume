@@ -26,3 +26,8 @@ venv/
 
 # PDF outputs (generated resumes)
 *.pdf
+
+# Workflow state and logs
+.workflow_state*.json
+logs/
+*.log
