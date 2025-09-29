@@ -1,0 +1,28 @@
+# OS files
+.DS_Store
+
+# IDE and editor files
+.claude/
+
+# Build and output directories
+build/
+output/
+resumes/
+job_search_output/
+fetch_job/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Environment variables
+.env
+.env.local
+
+# PDF outputs (generated resumes)
+*.pdf
